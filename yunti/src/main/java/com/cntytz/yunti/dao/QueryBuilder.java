@@ -25,29 +25,29 @@ import java.util.Set;
 @Slf4j
 public class QueryBuilder {
 
-    public static <T, DTO> QueryWrapper<T> toQueryWrapper(DTO dto) {
-        return toQueryWrapper(dto, null);
+    public static <T, P> QueryWrapper<T> toQueryWrapper(P p) {
+        return toQueryWrapper(p, null);
     }
 
-    public static <T, DTO> LambdaQueryWrapper<T> toLambdaQueryWrapper(DTO dto) {
-        return (LambdaQueryWrapper<T>) toQueryWrapper(dto).lambda();
+    public static <T, P> LambdaQueryWrapper<T> toLambdaQueryWrapper(P p) {
+        return (LambdaQueryWrapper<T>) toQueryWrapper(p).lambda();
     }
 
-    public static <T, DTO> QueryWrapper<T> toQueryWrapper(DTO dto, Collection<String> fields) {
+    public static <T, P> QueryWrapper<T> toQueryWrapper(P p, Collection<String> fields) {
         QueryWrapper<T> wrapper = new QueryWrapper<>();
-        return dtoToWrapper(wrapper, dto, fields);
+        return pToWrapper(wrapper, p, fields);
     }
 
     /**
      * 转换具体实现
      *
      * @param wrapper
-     * @param dto
+     * @param p
      * @param <T>
      * @return
      */
-    private static <T, DTO> QueryWrapper<T> dtoToWrapper(QueryWrapper<T> wrapper, DTO dto, Collection<String> fields) {
-        List<Field> declaredFields = extractAllFields(dto.getClass());
+    private static <T, P> QueryWrapper<T> pToWrapper(QueryWrapper<T> wrapper, P p, Collection<String> fields) {
+        List<Field> declaredFields = extractAllFields(p.getClass());
         for (Field field : declaredFields) {
             // 非指定属性，非逻辑删除字段，跳过
             if (fields != null && !fields.contains(field.getName())) {
@@ -74,7 +74,7 @@ public class QueryBuilder {
             field.setAccessible(true);
             Object value = null;
             try {
-                value = field.get(dto);
+                value = field.get(p);
             } catch (IllegalAccessException e) {
                 log.error("通过反射获取属性值出错：" + e);
             }

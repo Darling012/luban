@@ -7,6 +7,8 @@ import com.cntytz.web.service.BaseUserService;
 import com.cntytz.yunti.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @program: luban
  * @description:
@@ -16,4 +18,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class BaseUserServiceImpl extends BaseServiceImpl<UserMapper, User> implements BaseUserService {
 
+    @Override
+    public List<User> queryByEmail(String email) {
+       return this.baseMapper.findByEmail(email);
+    }
 }

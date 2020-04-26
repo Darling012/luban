@@ -15,5 +15,4 @@ import org.springframework.stereotype.Component;
 @Mapper(componentModel = "spring")
 @Component
 public interface UserCopier extends BaseCopier<User, UserVo> {
-
 }

@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * @create: 2020-04-14 17:07
  **/
 @Slf4j
-public class BaseController<T extends BaseEntity, V extends Serializable, P extends V> {
+public class BaseController<T extends BaseEntity, V extends Serializable, P> {
 
     private BaseService<T> baseService;
 
