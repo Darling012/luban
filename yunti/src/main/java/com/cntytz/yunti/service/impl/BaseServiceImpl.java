@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.cntytz.yunti.exception.EntityNotFoundException;
-import com.cntytz.yunti.exception.ServiceException;
+import com.cntytz.yunti.exception.EntityCrudException;
+import com.cntytz.yunti.exception.enums.GlobalExceptionCode;
 import com.cntytz.yunti.service.BaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,14 +32,14 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, 
 
     @Override
     public T getEntityById(Serializable id) {
-        return Optional.of(super.getById(id)).orElseThrow(() -> new EntityNotFoundException("数据库未查询到"));
+        return Optional.of(super.getById(id)).orElseThrow(() -> new EntityCrudException(GlobalExceptionCode.ADD_ENTITY_ERROR));
     }
 
     @Override
     public void createEntity(T entity) {
         boolean flag = super.save(entity);
         if (!flag) {
-            throw new ServiceException("新增数据失败");
+            throw new EntityCrudException(GlobalExceptionCode.ADD_ENTITY_ERROR);
         }
     }
 
@@ -56,7 +56,7 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, 
     public void updateEntityById(T entity) {
         boolean flag = super.updateById(entity);
         if (!flag) {
-            throw new ServiceException("更新数据失败");
+            throw  new EntityCrudException(GlobalExceptionCode.UPDATE_ENTITY_ERROR);
         }
     }
 
@@ -64,7 +64,7 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, 
     public void updateEntityById(T entity, Wrapper<T> updateCriteria) {
         boolean flag = super.update(entity, updateCriteria);
         if (!flag) {
-            throw new ServiceException("更新数据失败");
+            throw  new EntityCrudException(GlobalExceptionCode.UPDATE_ENTITY_ERROR);
         }
     }
 
@@ -72,7 +72,7 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, 
     public void updateEntityById(Wrapper<T> updateWrapper) {
         boolean flag = super.update(null, updateWrapper);
         if (!flag) {
-            throw new ServiceException("更新数据失败");
+            throw  new EntityCrudException(GlobalExceptionCode.UPDATE_ENTITY_ERROR);
         }
     }
 
@@ -80,7 +80,7 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, 
     public void updateEntities(Collection<T> entityList) {
         boolean flag = super.updateBatchById(entityList);
         if (!flag) {
-            throw new ServiceException("更新数据失败");
+            throw  new EntityCrudException(GlobalExceptionCode.UPDATE_ENTITY_ERROR);
         }
     }
 
@@ -89,7 +89,7 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, 
     public void createOrUpdateEntities(Collection<T> entityList) {
         boolean flag = super.saveOrUpdateBatch(entityList, 1000);
         if (!flag) {
-            throw new ServiceException("批量更新数据失败");
+            throw  new EntityCrudException(GlobalExceptionCode.UPDATE_ENTITY_ERROR);
         }
     }
 
@@ -97,7 +97,7 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, 
     public void deleteEntityById(Serializable id) {
         boolean flag = super.removeById(id);
         if (!flag) {
-            throw new ServiceException("删除数据失败");
+            throw  new EntityCrudException(GlobalExceptionCode.DELETE_ENTITY_ERROR);
         }
     }
 
@@ -105,7 +105,7 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, 
     public void deleteEntitiesByIds(Wrapper<T> queryWrapper) {
         boolean flag = super.remove(queryWrapper);
         if (!flag) {
-            throw new ServiceException("删除数据失败");
+            throw new EntityCrudException(GlobalExceptionCode.DELETE_ENTITY_ERROR);
         }
     }
 
@@ -113,7 +113,7 @@ public class BaseServiceImpl<M extends BaseMapper<T>, T> extends ServiceImpl<M, 
     public void deleteEntitiesByIds(Collection<? extends Serializable> entityIds) {
         boolean flag = super.removeByIds(entityIds);
         if (!flag) {
-            throw new ServiceException("删除数据失败");
+            throw new EntityCrudException(GlobalExceptionCode.DELETE_ENTITY_ERROR);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.cntytz.yunti.exception;
 
-import com.cntytz.yunti.exception.enums.GlobalExceptionCode;
+import com.cntytz.yunti.exception.enums.GlobalStateCode;
+import com.cntytz.yunti.exception.enums.HttpStateCode;
 import lombok.Getter;
 
 /**
@@ -8,48 +9,34 @@ import lombok.Getter;
  *
  * @author Darling
  */
-public class ServiceException extends RuntimeException {
+public class ServiceException extends BaseException {
     private static final long serialVersionUID = 2359767895161832954L;
 
     @Getter
-    private final GlobalExceptionCode resultCode;
+    private final GlobalStateCode globalStateCode;
 
     public ServiceException(String message) {
         super(message);
-        this.resultCode = GlobalExceptionCode.FAILURE;
+        this.globalStateCode = HttpStateCode.FAILURE;
     }
 
-    public ServiceException(GlobalExceptionCode resultCode) {
+    public ServiceException(HttpStateCode resultCode) {
         super(resultCode.getMsg());
-        this.resultCode = resultCode;
+        this.globalStateCode = resultCode;
     }
 
-    public ServiceException(GlobalExceptionCode resultCode, String msg) {
+    public ServiceException(HttpStateCode resultCode, String msg) {
         super(msg);
-        this.resultCode = resultCode;
+        this.globalStateCode = resultCode;
     }
 
-    public ServiceException(GlobalExceptionCode resultCode, Throwable cause) {
+    public ServiceException(HttpStateCode resultCode, Throwable cause) {
         super(cause);
-        this.resultCode = resultCode;
+        this.globalStateCode = resultCode;
     }
 
     public ServiceException(String msg, Throwable cause) {
         super(msg, cause);
-        this.resultCode = GlobalExceptionCode.FAILURE;
-    }
-
-    /**
-     * for better performance
-     *
-     * @return Throwable
-     */
-    @Override
-    public Throwable fillInStackTrace() {
-        return this;
-    }
-
-    public Throwable doFillInStackTrace() {
-        return super.fillInStackTrace();
+        this.globalStateCode = HttpStateCode.FAILURE;
     }
 }

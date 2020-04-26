@@ -3,87 +3,47 @@ package com.cntytz.yunti.exception.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import javax.servlet.http.HttpServletResponse;
-
 /**
- * @author Darling
- */
+ * @program: luban
+ * @description: 自定义全局错误码
+ * @author: ling
+ * @create: 2020-04-26 21:52
+ **/
 @AllArgsConstructor
 @Getter
-public enum GlobalExceptionCode {
-
+public enum GlobalExceptionCode implements GlobalStateCode {
+    /**
+     *
+     */
+    ADD_ENTITY_ERROR("1", "新增实体数据异常"),
+    /**
+     *
+     */
+    QUERY_ENTITY_ERROR("2", "查询实体数据异常"),
+    /**
+     *
+     */
+    UPDATE_ENTITY_ERROR("3", "更新实体数据异常"),
 
     /**
      *
      */
-    SUCCESS(HttpServletResponse.SC_OK, "Operation is Successful"),
-
+    DELETE_ENTITY_ERROR("4", "删除实体数据异常"),
     /**
      *
      */
-    FAILURE(HttpServletResponse.SC_BAD_REQUEST, "Biz Exception"),
+    ERROR("-1", "未知错误");
 
-    /**
-     *
-     */
-    UN_AUTHORIZED(HttpServletResponse.SC_UNAUTHORIZED, "Request Unauthorized"),
+    private final String code;
+    private final String message;
 
-    /**
-     *
-     */
-    NOT_FOUND(HttpServletResponse.SC_NOT_FOUND, "404 Not Found"),
+    @Override
+    public String getCode() {
+        return this.code;
+    }
 
-    /**
-     *
-     */
-    MSG_NOT_READABLE(HttpServletResponse.SC_BAD_REQUEST, "Message Can't be Read"),
-
-    /**
-     *
-     */
-    METHOD_NOT_SUPPORTED(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Method Not Supported"),
-
-    /**
-     *
-     */
-    MEDIA_TYPE_NOT_SUPPORTED(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, "Media Type Not Supported"),
-
-    /**
-     *
-     */
-    REQ_REJECT(HttpServletResponse.SC_FORBIDDEN, "Request Rejected"),
-
-    /**
-     *
-     */
-    INTERNAL_SERVER_ERROR(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error"),
-
-    /**
-     *
-     */
-    PARAM_MISS(HttpServletResponse.SC_BAD_REQUEST, "Missing Required Parameter"),
-
-    /**
-     *
-     */
-    PARAM_TYPE_ERROR(HttpServletResponse.SC_BAD_REQUEST, "Parameter Type Mismatch"),
-
-    /**
-     *
-     */
-    PARAM_BIND_ERROR(HttpServletResponse.SC_BAD_REQUEST, "Parameter Binding Error"),
-
-    /**
-     *
-     */
-    PARAM_VALID_ERROR(HttpServletResponse.SC_BAD_REQUEST, "Parameter Validation Error");;
-    /**
-     * 异常代码
-     */
-    private final int code;
-    /**
-     * 异常信息
-     */
-    private final String msg;
-
+    @Override
+    public String getMsg() {
+        return this.message;
+    }
 }

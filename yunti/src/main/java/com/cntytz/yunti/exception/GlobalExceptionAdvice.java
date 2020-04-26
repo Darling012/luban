@@ -2,6 +2,7 @@ package com.cntytz.yunti.exception;
 
 import com.cntytz.yunti.body.pojo.RespResult;
 import com.cntytz.yunti.exception.enums.GlobalExceptionCode;
+import com.cntytz.yunti.exception.enums.HttpStateCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -46,7 +47,7 @@ public class GlobalExceptionAdvice {
         FieldError fieldError = e.getBindingResult().getFieldError();
         log.error("参数绑定异常[{}]:[{}]", fieldError.getField(), fieldError.getDefaultMessage());
         log.error(ExceptionUtil.getMessage(e));
-        return RespResult.fail(GlobalExceptionCode.PARAM_BIND_ERROR.getCode(), "请求参数 " + fieldError.getDefaultMessage() + "不能为空");
+        return RespResult.fail(HttpStateCode.PARAM_BIND_ERROR.getCode(), "请求参数 " + fieldError.getDefaultMessage() + "不能为空");
     }
 
     /**
@@ -69,10 +70,10 @@ public class GlobalExceptionAdvice {
             if (!errors.isEmpty()) {
                 // 这里列出了全部错误参数，按正常逻辑，只需要第一条错误即可
                 FieldError fieldError = (FieldError) errors.get(0);
-                return RespResult.fail(GlobalExceptionCode.PARAM_VALID_ERROR.getCode(), fieldError.getDefaultMessage());
+                return RespResult.fail(HttpStateCode.PARAM_VALID_ERROR.getCode(), fieldError.getDefaultMessage());
             }
         }
-        return RespResult.fail(GlobalExceptionCode.PARAM_VALID_ERROR.getCode(), e.getMessage());
+        return RespResult.fail(HttpStateCode.PARAM_VALID_ERROR.getCode(), e.getMessage());
     }
 
     /**
@@ -83,7 +84,7 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public RespResult<Void> methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         log.error("Method Argument Type Mismatch", e);
-        return RespResult.fail(GlobalExceptionCode.PARAM_TYPE_ERROR.getCode(), e.getMessage());
+        return RespResult.fail(HttpStateCode.PARAM_TYPE_ERROR.getCode(), e.getMessage());
     }
 
 
@@ -98,7 +99,7 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(ConstraintViolationException.class)
     public RespResult<Void> constraintViolationExceptionHandler(ConstraintViolationException e) {
         log.error("Constraint Violation", e);
-        return RespResult.fail(GlobalExceptionCode.PARAM_VALID_ERROR.getCode(), e.getMessage());
+        return RespResult.fail(HttpStateCode.PARAM_VALID_ERROR.getCode(), e.getMessage());
     }
 
     /**
@@ -114,7 +115,7 @@ public class GlobalExceptionAdvice {
     public RespResult<Void> parameterMissingExceptionHandler(MissingServletRequestParameterException e) {
         log.error("缺少请求参数：{}", e.getParameterName());
         log.error(ExceptionUtil.getMessage(e));
-        return RespResult.fail(GlobalExceptionCode.PARAM_MISS.getCode(), "请求参数 " + e.getParameterName() + " 不能为空");
+        return RespResult.fail(HttpStateCode.PARAM_MISS.getCode(), "请求参数 " + e.getParameterName() + " 不能为空");
     }
 
 
@@ -122,7 +123,7 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(NoHandlerFoundException.class)
     public RespResult<Void> noHandlerFoundException(NoHandlerFoundException e) {
         log.error("404 Not Found", e);
-        return RespResult.fail(GlobalExceptionCode.NOT_FOUND.getCode(), "请求参数 " + e.getMessage() + " 不能为空");
+        return RespResult.fail(HttpStateCode.NOT_FOUND.getCode(), "请求参数 " + e.getMessage() + " 不能为空");
     }
 
     /**
@@ -137,21 +138,21 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public RespResult<Void> parameterBodyMissingExceptionHandler(HttpMessageNotReadableException e) {
         log.error("Message Not Readable", e);
-        return RespResult.fail(GlobalExceptionCode.MSG_NOT_READABLE.getCode(), "参数体不能为空");
+        return RespResult.fail(HttpStateCode.MSG_NOT_READABLE.getCode(), "参数体不能为空");
     }
 
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public RespResult<Void> httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         log.error("Request Method Not Supported", e);
-        return RespResult.fail(GlobalExceptionCode.METHOD_NOT_SUPPORTED.getCode(), "请求方式错误");
+        return RespResult.fail(HttpStateCode.METHOD_NOT_SUPPORTED.getCode(), "请求方式错误");
     }
 
     @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public RespResult<Void> httpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e) {
         log.error("Media Type Not Supported", e);
-        return RespResult.fail(GlobalExceptionCode.MEDIA_TYPE_NOT_SUPPORTED.getCode(), "参数体不能为空");
+        return RespResult.fail(HttpStateCode.MEDIA_TYPE_NOT_SUPPORTED.getCode(), "参数体不能为空");
     }
 
     /**
@@ -164,7 +165,7 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(ServletRequestBindingException.class)
     public RespResult<Void> servletRequestBindingExceptionHandler(ServletRequestBindingException e) {
         log.error("必填参数缺失", e);
-        return RespResult.fail(GlobalExceptionCode.PARAM_MISS.getCode(), "请求参数 " + e.getMessage() + " 不能为空");
+        return RespResult.fail(HttpStateCode.PARAM_MISS.getCode(), "请求参数 " + e.getMessage() + " 不能为空");
     }
 
     /**
@@ -178,7 +179,21 @@ public class GlobalExceptionAdvice {
     public RespResult<Void> paramExceptionHandler(ServiceException e) {
         log.error("业务异常{}", e.getMessage());
         log.error(ExceptionUtil.getMessage(e));
-        return RespResult.fail(e.getResultCode().getCode(), e.getMessage());
+        return RespResult.fail(e.getGlobalStateCode().getCode(), e.getMessage());
+    }
+
+     /**
+     * 自定义参数错误异常处理器
+     *
+     * @param e 自定义参数
+     * @return ResponseInfo
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({EntityCrudException.class})
+    public RespResult<Void> entityNotFoundException(EntityCrudException e) {
+        log.error("业务异常{}", e.getMessage());
+        log.error(ExceptionUtil.getMessage(e));
+        return RespResult.fail(e.getGlobalStateCode());
     }
 
     /**
@@ -189,7 +204,7 @@ public class GlobalExceptionAdvice {
         // 未知异常
         log.error("捕获到未经处理的未知异常, {}", t.getMessage());
         log.error("", t);
-        return RespResult.fail(GlobalExceptionCode.INTERNAL_SERVER_ERROR.getCode(), "服务发生异常");
+        return RespResult.fail(GlobalExceptionCode.ERROR);
     }
 
 }
