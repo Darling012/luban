@@ -1,9 +1,11 @@
 package com.cntytz.yunti.exception.enums;
 
+import java.io.Serializable;
+
 /**
  * @author Darling
  */
-public interface GlobalStateCode {
+public interface GlobalStateCode extends Serializable {
     /**
      * 全局状态码
      *

@@ -25,6 +25,9 @@ import java.util.Set;
 @Slf4j
 public class QueryBuilder {
 
+    private QueryBuilder() {
+    }
+
     public static <T, P> QueryWrapper<T> toQueryWrapper(P p) {
         return toQueryWrapper(p, null);
     }
@@ -35,7 +38,7 @@ public class QueryBuilder {
 
     public static <T, P> QueryWrapper<T> toQueryWrapper(P p, Collection<String> fields) {
         QueryWrapper<T> wrapper = new QueryWrapper<>();
-        return pToWrapper(wrapper, p, fields);
+        return condationToWrapper(wrapper, p, fields);
     }
 
     /**
@@ -46,7 +49,7 @@ public class QueryBuilder {
      * @param <T>
      * @return
      */
-    private static <T, P> QueryWrapper<T> pToWrapper(QueryWrapper<T> wrapper, P p, Collection<String> fields) {
+    private static <T, P> QueryWrapper<T> condationToWrapper(QueryWrapper<T> wrapper, P p, Collection<String> fields) {
         List<Field> declaredFields = extractAllFields(p.getClass());
         for (Field field : declaredFields) {
             // 非指定属性，非逻辑删除字段，跳过

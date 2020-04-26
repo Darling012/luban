@@ -11,6 +11,10 @@ import java.io.StringWriter;
  */
 @Slf4j
 public class ExceptionUtil {
+
+    private ExceptionUtil() {
+    }
+
     /**
      * 打印异常信息
      */
@@ -22,7 +26,6 @@ public class ExceptionUtil {
             sw.flush();
             swStr = sw.toString();
         } catch (IOException ex) {
-            ex.printStackTrace();
             log.error(ex.getMessage());
         }
         return swStr;

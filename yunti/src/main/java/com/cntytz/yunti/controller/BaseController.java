@@ -3,11 +3,11 @@ package com.cntytz.yunti.controller;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.cntytz.yunti.body.pojo.PageResult;
-import com.cntytz.yunti.dao.QueryBuilder;
 import com.cntytz.yunti.body.pojo.PageCondition;
+import com.cntytz.yunti.body.pojo.PageResult;
 import com.cntytz.yunti.controller.copier.BaseCopier;
 import com.cntytz.yunti.dao.BaseEntity;
+import com.cntytz.yunti.dao.QueryBuilder;
 import com.cntytz.yunti.service.BaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,9 +30,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BaseController<T extends BaseEntity, V extends Serializable, P> {
 
-    private BaseService<T> baseService;
+    private  BaseService<T> baseService;
 
     private BaseCopier<T, V> baseCopier;
+
 
     public BaseController(BaseService<T> baseService, BaseCopier<T, V> baseCopier) {
         this.baseService = baseService;
